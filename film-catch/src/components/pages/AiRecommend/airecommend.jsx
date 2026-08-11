@@ -16,41 +16,43 @@ const AIRecommend = () => {
 
     const getRecommendations = async () => {
         setLoading(true);
-        const likedMovies = movieInput
-            .split(",")
-            .map(movie => movie.trim());
 
-        const aiResponse = await axios.post(
-            "http://127.0.0.1:5000/recommend",
-            {
-                movies: likedMovies
-            }
-        );
+        try {
+            const likedMovies = movieInput
+                .split(",")
+                .map(movie => movie.trim())
+                .filter(movie => movie.length > 0);
 
-        const recommendedMovies = aiResponse.data;
-
-        let allMovies = [];
-
-        for (let movie of recommendedMovies) {
-
-            const { data } = await axios.get(
-                `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_API_KEY}&query=${movie}`
+            const aiResponse = await axios.post(
+                "https://film-catch-backend.onrender.com/recommend",
+                {
+                    movies: likedMovies
+                }
             );
 
-            if (data.results.length > 0) {
-                allMovies.push(data.results[0]);
+            const recommendedMovies = aiResponse.data;
+
+            let allMovies = [];
+
+            for (let movie of recommendedMovies) {
+
+                const { data } = await axios.get(
+                    `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_API_KEY}&query=${encodeURIComponent(movie)}`
+                );
+
+                if (data.results.length > 0) {
+                    allMovies.push(data.results[0]);
+                }
             }
-        }
-        try {
+
             setContent(allMovies);
+
         } catch (error) {
-            console.log(error);
-        }
-        finally {
+            console.error("Recommendation error:", error);
+        } finally {
             setLoading(false);
         }
     };
-
 
     return (
         <>
@@ -78,12 +80,12 @@ const AIRecommend = () => {
                 </Button>
             </div>
             {loading && (
-            <div className="ai-loader">
-                <CircularProgress />
-                <div className="ai-loader-text">
-                    AI is finding movies for you...
-                </div>
-            </div>)}
+                <div className="ai-loader">
+                    <CircularProgress />
+                    <div className="ai-loader-text">
+                        AI is finding movies for you...
+                    </div>
+                </div>)}
             <div className="trending">
                 {content &&
                     content.map((c) => (
