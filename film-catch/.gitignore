@@ -1,0 +1,23 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Python temporary files
+tempCodeRunnerFile.py
+
+# Node
+node_modules/
+
+# React/Vite build
+build/
+dist/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,24 @@
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+tempCodeRunnerFile.py
+
+# React / Node
+node_modules/
+build/
+dist/
+
+# Archives
+*.zip
+
+# OS
+.DS_Store
+Thumbs.db
