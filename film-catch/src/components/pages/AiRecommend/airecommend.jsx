@@ -32,18 +32,17 @@ const AIRecommend = () => {
 
             const recommendedMovies = aiResponse.data;
 
-            let allMovies = [];
-
-            for (let movie of recommendedMovies) {
-
-                const { data } = await axios.get(
+            const movieRequests = recommendedMovies.map(movie =>
+                axios.get(
                     `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_API_KEY}&query=${encodeURIComponent(movie)}`
-                );
+                )
+            );
 
-                if (data.results.length > 0) {
-                    allMovies.push(data.results[0]);
-                }
-            }
+            const responses = await Promise.all(movieRequests);
+
+            const allMovies = responses
+                .map(response => response.data.results[0])
+                .filter(Boolean);
 
             setContent(allMovies);
 
